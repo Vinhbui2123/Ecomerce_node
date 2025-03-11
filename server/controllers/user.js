@@ -38,15 +38,19 @@ const login = asyncHandler(async (req, res) => {
   const response = await User.findOne({ email })
   if (response && (await response.isCorrectPassword(password))) {
     // tach password va role ra khoi response
-    const { password, role, ...userData } = response.toObject()
+    const { password, role, refreshToken, ...userData } = response.toObject()
     //tao token
     const accessToken = generateAccessToken(response._id, role)
     // tao refresh token
-    const refreshToken = generateRefreshToken(response._id)
+    const newRefreshToken = generateRefreshToken(response._id)
     // Luu refesh token vao db
-    await User.findByIdAndUpdate(response._id, { refreshToken }, { new: true })
+    await User.findByIdAndUpdate(
+      response._id,
+      { refreshToken: newRefreshToken },
+      { new: true }
+    )
     // Luu refresh token vao cookie
-    res.cookie("refreshToken", refreshToken, {
+    res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     })
@@ -67,7 +71,7 @@ const getCurrent = asyncHandler(async (req, res) => {
   const { _id } = req.user
   const user = await User.findById(_id).select("-password -refreshToken -role")
   return res.status(200).json({
-    success: true,
+    success: user ? true : false,
     rs: user ? user : "User not found",
   })
 })
@@ -147,6 +151,7 @@ const resetPassword = asyncHandler(async (req, res) => {
     passwordResetToken,
     passwordResetExpires: { $gt: Date.now() },
   })
+  // Neu khong tim thay user hoac token het han
   if (!user) throw new Error("Invalid or expired token")
   user.password = password
   user.passwordResetToken = undefined
@@ -159,6 +164,48 @@ const resetPassword = asyncHandler(async (req, res) => {
   })
 })
 
+const getUsers = asyncHandler(async (req, res) => {
+  const response = await User.find()
+  return res.status(200).json({
+    success: response ? true : false,
+    users: response,
+  })
+})
+const deleteUsers = asyncHandler(async (req, res) => {
+  const { _id } = req.query
+  if (!_id) throw new Error("Id is required")
+  const response = await User.findByIdAndDelete(_id)
+  return res.status(200).json({
+    success: response ? true : false,
+    deleteUsers: response
+      ? `Users with email ${response.email}`
+      : "No user deleted",
+  })
+})
+const updateUser = asyncHandler(async (req, res) => {
+  const { _id } = req.user
+  if (!_id || Object.keys(req.body).length === 0)
+    throw new Error("Id is required")
+  const response = await User.findByIdAndUpdate(_id, req.body, {
+    new: true,
+  }).select("-password -role -refreshToken")
+  return res.status(200).json({
+    success: response ? true : false,
+    updateUser: response ? response : "User not found",
+  })
+})
+const updateUserByAdmin = asyncHandler(async (req, res) => {
+  const { uid } = req.params // uid la id cua user
+  if (Object.keys(req.body).length === 0) throw new Error("Id is required")
+  const response = await User.findByIdAndUpdate(uid, req.body, {
+    new: true,
+  }).select("-password -role -refreshToken")
+  return res.status(200).json({
+    success: response ? true : false,
+    updateUser: response ? response : "User not found",
+  })
+})
+
 module.exports = {
   register,
   login,
@@ -167,4 +214,8 @@ module.exports = {
   logout,
   fogotPassword,
   resetPassword,
+  getUsers,
+  deleteUsers,
+  updateUser,
+  updateUserByAdmin,
 }
