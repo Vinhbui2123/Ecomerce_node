@@ -130,8 +130,17 @@ const rating = asyncHandler(async (req, res) => {
   })
 })
 const uploadImagesProduct = asyncHandler(async (req, res) => {
-  console.log(req.file)
-  return res.json("oke")
+  const { pid } = req.params
+  if (!req.files) throw new Error("Please upload images")
+  const response = await Product.findByIdAndUpdate(
+    pid,
+    { $push: { images: { $each: req.files.map((el) => el.path) } } },
+    { new: true }
+  )
+  return res.status(200).json({
+    success: response ? true : false,
+    uploadImagesProduct: response ? response : "Can not upload images",
+  })
 })
 
 module.exports = {

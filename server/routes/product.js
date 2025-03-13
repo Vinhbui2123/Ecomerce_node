@@ -8,7 +8,7 @@ router.get("/", ctrls.getAllProduct)
 router.put("/rating", verifyAccessToken, ctrls.rating)
 router.put(
   "/uploadimage/:pid",
-  uploader.single("images"),
+  uploader.array("images", 10),
   [verifyAccessToken, isAdmin],
   ctrls.uploadImagesProduct
 )

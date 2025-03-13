@@ -10,6 +10,8 @@ router.get("/logout", ctrls.logout)
 router.get("/fogotpassword", ctrls.fogotPassword)
 router.put("/resetpassword", ctrls.resetPassword)
 router.put("/update", verifyAccessToken, ctrls.updateUser)
+router.put("/address", verifyAccessToken, ctrls.updateUserAddress)
+router.put("/cart", verifyAccessToken, ctrls.updateCart)
 // check user role and permissions
 router.get("/", [verifyAccessToken, isAdmin], ctrls.getUsers)
 router.delete("/", [verifyAccessToken, isAdmin], ctrls.deleteUsers)

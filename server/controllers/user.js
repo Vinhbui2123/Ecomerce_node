@@ -205,6 +205,77 @@ const updateUserByAdmin = asyncHandler(async (req, res) => {
     updateUser: response ? response : "User not found",
   })
 })
+const updateUserAddress = asyncHandler(async (req, res) => {
+  const { _id } = req.user // uid la id cua user
+  if (!req.body.address) throw new Error("Id is required")
+  const response = await User.findByIdAndUpdate(
+    _id,
+    { $push: { address: req.body.address } },
+    {
+      new: true,
+    }
+  ).select("-password -role -refreshToken")
+  return res.status(200).json({
+    success: response ? true : false,
+    updateUser: response ? response : "User not found",
+  })
+})
+const updateCart = asyncHandler(async (req, res) => {
+  const { _id } = req.user
+  const { pid, quantity, color } = req.body
+  if (!pid || !quantity || !color)
+    throw new Error("Product ID, quantity, and color are required")
+
+  const user = await User.findById(_id).select("cart")
+  const alreadyProduct = user?.cart?.find((el) => el.product.toString() === pid)
+// check xem product da co trong cart chua
+  // neu co roi thi check xem co cung color khong
+  // neu cung color thi update quantity
+  // neu khong cung color thi push product moi vao cart
+  // neu khong co product trong cart thi push product moi vao cart 
+  if (alreadyProduct) {
+    if (alreadyProduct.color === color) {
+      const response = await User.updateOne(
+        { _id, "cart.product": pid },
+        {
+          $set: {
+            "cart.$.quantity": quantity,
+          },
+        }
+      ).select("-password -role -refreshToken")
+      return res.status(200).json({
+        success: response ? true : false,
+        updateUser: response ? response : "User not found",
+      })
+    } else {
+      const response = await User.findByIdAndUpdate(
+        _id,
+        { $push: { cart: { product: pid, quantity, color } } },
+        {
+          new: true,
+        }
+      ).select("-password -role -refreshToken")
+
+      return res.status(200).json({
+        success: response ? true : false,
+        updateUser: response ? response : "User not found",
+      })
+    }
+  } else {
+    const response = await User.findByIdAndUpdate(
+      _id,
+      { $push: { cart: { product: pid, quantity, color } } },
+      {
+        new: true,
+      }
+    ).select("-password -role -refreshToken")
+
+    return res.status(200).json({
+      success: response ? true : false,
+      updateUser: response ? response : "User not found",
+    })
+  }
+})
 
 module.exports = {
   register,
@@ -218,4 +289,6 @@ module.exports = {
   deleteUsers,
   updateUser,
   updateUserByAdmin,
+  updateUserAddress,
+  updateCart,
 }
