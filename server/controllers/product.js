@@ -129,6 +129,10 @@ const rating = asyncHandler(async (req, res) => {
     updatedRating,
   })
 })
+const uploadImagesProduct = asyncHandler(async (req, res) => {
+  console.log(req.file)
+  return res.json("oke")
+})
 
 module.exports = {
   createProduct,
@@ -137,4 +141,5 @@ module.exports = {
   getUpdateProduct,
   deleteProduct,
   rating,
+  uploadImagesProduct,
 }
