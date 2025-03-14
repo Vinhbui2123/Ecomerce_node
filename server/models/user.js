@@ -37,10 +37,7 @@ var userSchema = new mongoose.Schema(
         color: String,
       },
     ],
-    address: {
-      type: Array,
-      default: [],
-    },
+    address: String,
     whislist: [
       {
         type: mongoose.Schema.Types.ObjectId,
