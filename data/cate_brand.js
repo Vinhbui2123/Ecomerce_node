@@ -30,5 +30,13 @@ const data = [
     cate: "Printer",
     brand: ["Apple", "Acer", "Asus", "Lenovo", "Haier"],
   },
+  {
+    cate: "Speaker",
+    brand: [],
+  },
+  {
+    cate: "Camera",
+    brand: [],
+  },
 ]
 module.exports = data
