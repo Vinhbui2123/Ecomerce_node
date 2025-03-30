@@ -36,7 +36,6 @@ const BestSeller = () => {
       setproducts(response[0].products)
     }
     if (response[1]?.success) setNewProducts(response[1].products)
-    setproducts(response[0].products)
   }
 
   useEffect(() => {
@@ -45,7 +44,7 @@ const BestSeller = () => {
   useEffect(() => {
     if (activedTab === 1) setproducts(bestSeller)
     if (activedTab === 2) setproducts(newProducts)
-  }, [activedTab])
+  }, [activedTab, bestSeller, newProducts])
   return (
     <div>
       <div className="flex text-[20px] ml-[-32px]">
