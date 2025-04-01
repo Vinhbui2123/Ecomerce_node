@@ -31,12 +31,6 @@ const insertData = asyncHandler(async (req, res) => {
   await Promise.all(promises)
   return res.json("dung")
 })
-const fn2 = async (cate) => {
-  await ProductCategory.create({
-    title: cate?.cate,
-    brand: cate?.brand,
-  })
-}
 const insertCategory = asyncHandler(async (req, res) => {
   try {
     // First drop the existing indexes that are causing problems
@@ -52,6 +46,7 @@ const insertCategory = asyncHandler(async (req, res) => {
         ProductCategory.create({
           title: cate?.cate,
           brand: cate?.brand,
+          image: cate?.image,
         })
       )
     }
