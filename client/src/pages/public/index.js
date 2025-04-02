@@ -1,3 +1,8 @@
 export { default as Login } from "./login"
 export { default as Home } from "./home"
 export { default as Public } from "./public"
+export { default as Products } from "./products"
+export { default as Services } from "./services"
+export { default as Blogs } from "./blogs"
+export { default as FAQ } from "./FAQ"
+export { default as DetailProduct } from "./detailProduct"

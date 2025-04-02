@@ -1,7 +1,13 @@
 import { MdPhone } from "react-icons/md"
 import { MdEmail } from "react-icons/md"
 import { BsFillSuitHeartFill, BsHandbagFill } from "react-icons/bs"
-import { FaUserCircle } from "react-icons/fa"
+import {
+  FaUserCircle,
+  FaFacebook,
+  FaTwitter,
+  FaInstagram,
+  FaLinkedin,
+} from "react-icons/fa"
 import {
   AiFillEye,
   AiFillHome,
@@ -22,5 +28,9 @@ const icons = {
   BsFillSuitHeartFill,
   AiOutlineMenu,
   IoIosArrowForward,
+  FaFacebook,
+  FaTwitter,
+  FaInstagram,
+  FaLinkedin,
 }
 export default icons

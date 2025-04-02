@@ -5,14 +5,17 @@ import trending from "../assets/trending.png"
 import { renderStarFromNumber } from "../ultils/helper"
 import { SelectOption } from "./"
 import icons from "../ultils/icons"
+import { Link } from "react-router-dom"
+import path from "../ultils/path"
 
 const { AiFillEye, BsFillSuitHeartFill, AiOutlineMenu } = icons
 const Product = ({ productData, isNew }) => {
   const [isShowOption, setisShowOption] = useState(false)
   return (
     <div className="w-full text-base px-[10px]">
-      <div
+      <Link
         className="w-full border p-[15px] flex flex-col gap-2 items-center justify-center rounded-lg hover:shadow-md transition-all duration-200 ease-in-out"
+        to={`/${path.DETAIL_PRODUCT}/${productData?._id}/${productData?.title}`}
         onMouseEnter={(e) => {
           e.stopPropagation()
           setisShowOption(true)
@@ -57,7 +60,7 @@ const Product = ({ productData, isNew }) => {
           <span className="line-clamp-1">{productData?.title}</span>
           <span>{`${formatCurrency(productData?.price)} VND`}</span>
         </div>
-      </div>
+      </Link>
     </div>
   )
 }
