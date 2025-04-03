@@ -27,8 +27,18 @@ module.exports = {
       keyframes: {
         "slide-top": {
           "0%": {
-            "-webkit-transform": "translateY(40px)",
+            "-webkit-transform": "translateY(20px)",
             transform: "translateY(20px)",
+          },
+          "100%": {
+            "-webkit-transform": "translateY(0)",
+            transform: "translateY(0)",
+          },
+        },
+        "slide-top-sm": {
+          "0%": {
+            "-webkit-transform": "translateY(4px)",
+            transform: "translateY(4px)",
           },
           "100%": {
             "-webkit-transform": "translateY(0)",
@@ -39,6 +49,7 @@ module.exports = {
       animation: {
         "slide-top":
           "slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both",
+        "slide-top-sm": "slide-top-sm 0.3s linear both",
       },
     },
   },

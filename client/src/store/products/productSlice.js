@@ -5,6 +5,7 @@ export const productSlice = createSlice({
   name: "product",
   initialState: {
     newProducts: null,
+    errorMessage: "",
   },
   reducers: {
     logout: (state) => {

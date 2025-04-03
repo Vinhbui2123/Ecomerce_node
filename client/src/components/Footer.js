@@ -125,7 +125,7 @@ const Footer = () => {
             <h3 className="mb-5 text-[16px] font-semibold border-l-2 border-main pl-[15px] text-white">
               #DigitalWorldStore
             </h3>
-            <div className="grid grid-cols-3 gap-2">
+            {/* <div className="grid grid-cols-3 gap-2">
               <img
                 src="https://via.placeholder.com/80"
                 alt="Gallery"
@@ -156,7 +156,7 @@ const Footer = () => {
                 alt="Gallery"
                 className="rounded hover:opacity-80 transition-opacity cursor-pointer"
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

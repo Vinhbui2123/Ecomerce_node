@@ -91,7 +91,10 @@ const DealDaily = () => {
         />
         <span className="line-clamp-1 text-center">{dealDaily?.title}</span>
         <span className="flex h-4">
-          {renderStarFromNumber(dealDaily?.totalRatings, 20)}
+          {dealDaily?.totalRatings &&
+            renderStarFromNumber(dealDaily.totalRatings, 20).map(
+              (star, index) => <span key={`star-${index}`}>{star}</span>
+            )}
         </span>
         <span>{`${formatCurrency(dealDaily?.price)} VND`}</span>
       </div>

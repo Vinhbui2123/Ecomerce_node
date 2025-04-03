@@ -13,7 +13,7 @@ const register = asyncHandler(async (req, res) => {
   if (!email || !password || !lastname || !firstname) {
     return res.status(400).json({
       success: false,
-      message: "All fields are required",
+      mes: "All fields are required",
     })
   }
   const user = await User.findOne({ email })
@@ -32,7 +32,7 @@ const login = asyncHandler(async (req, res) => {
   if (!email || !password) {
     return res.status(400).json({
       success: false,
-      message: "Missing output",
+      mes: "Missing output",
     })
   }
   const response = await User.findOne({ email })
@@ -62,7 +62,7 @@ const login = asyncHandler(async (req, res) => {
   } else {
     return res.status(401).json({
       success: false,
-      message: "Invalid credentials",
+      mes: "Invalid credentials",
     })
   }
 })
@@ -110,7 +110,7 @@ const logout = asyncHandler(async (req, res) => {
   })
   return res.status(200).json({
     success: true,
-    message: "Logout success",
+    mes: "Logout success",
   })
 })
 
@@ -134,7 +134,7 @@ const fogotPassword = asyncHandler(async (req, res) => {
   const rs = await sendMail(data)
   return res.status(200).json({
     success: true,
-    message: rs,
+    mes: rs,
   })
 })
 
@@ -228,11 +228,11 @@ const updateCart = asyncHandler(async (req, res) => {
 
   const user = await User.findById(_id).select("cart")
   const alreadyProduct = user?.cart?.find((el) => el.product.toString() === pid)
-// check xem product da co trong cart chua
+  // check xem product da co trong cart chua
   // neu co roi thi check xem co cung color khong
   // neu cung color thi update quantity
   // neu khong cung color thi push product moi vao cart
-  // neu khong co product trong cart thi push product moi vao cart 
+  // neu khong co product trong cart thi push product moi vao cart
   if (alreadyProduct) {
     if (alreadyProduct.color === color) {
       const response = await User.updateOne(
