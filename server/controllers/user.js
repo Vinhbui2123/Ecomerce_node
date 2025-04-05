@@ -7,10 +7,30 @@ const {
 const jwt = require("jsonwebtoken")
 const sendMail = require("../ultils/sendmail")
 const crypto = require("crypto")
+const makeToken = require("uniqid")
 
+// const register = asyncHandler(async (req, res) => {
+//   const { email, password, lastname, firstname } = req.body
+//   if (!email || !password || !lastname || !firstname) {
+//     return res.status(400).json({
+//       success: false,
+//       mes: "All fields are required",
+//     })
+//   }
+//   const user = await User.findOne({ email })
+//   if (user) {
+//     throw new Error("User already exists")
+//   } else {
+//     const newUser = await User.create(req.body)
+//     return res.status(200).json({
+//       success: newUser ? true : false,
+//       mes: newUser ? "User created successfully" : "something went wrong",
+//     })
+//   }
+// })
 const register = asyncHandler(async (req, res) => {
-  const { email, password, lastname, firstname } = req.body
-  if (!email || !password || !lastname || !firstname) {
+  const { email, password, lastname, firstname, mobile } = req.body
+  if (!email || !password || !lastname || !firstname || !mobile) {
     return res.status(400).json({
       success: false,
       mes: "All fields are required",
@@ -20,12 +40,42 @@ const register = asyncHandler(async (req, res) => {
   if (user) {
     throw new Error("User already exists")
   } else {
-    const newUser = await User.create(req.body)
-    return res.status(200).json({
-      success: newUser ? true : false,
-      mes: newUser ? "User created successfully" : "something went wrong",
+    const token = makeToken()
+    res.cookie(
+      "dataregister",
+      { ...req.body, token },
+      {
+        httpOnly: true,
+        maxAge: 15 * 60 * 1000,
+      }
+    )
+    const html = `<h1>Please click this link to active. This link will expire in 15 minutes</h1>
+  <a href=${process.env.URL_SERVER}/api/user/finalregister/${token}>Click here</a>`
+    await sendMail({ email, html, subject: "Active your account" })
+    return res.json({
+      success: true,
+      mes: "Please check your email to active your account",
     })
   }
+})
+const finalRegister = asyncHandler(async (req, res) => {
+  const cookie = req.cookies
+  const { token } = req.params
+  if (!cookie || cookie?.dataregister?.token !== token) {
+    res.clearCookie("dataregister")
+    return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
+  }
+  const newUser = await User.create({
+    email: cookie?.dataregister?.email,
+    password: cookie?.dataregister?.password,
+    firstname: cookie?.dataregister?.firstname,
+    lastname: cookie?.dataregister?.lastname,
+    mobile: cookie?.dataregister?.mobile,
+  })
+  res.clearCookie("dataregister")
+  if (newUser)
+    return res.redirect(`${process.env.CLIENT_URL}/finalregister/success`)
+  else return res.redirect(`${process.env.CLIENT_URL}/finalregister/failed`)
 })
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body
@@ -115,7 +165,7 @@ const logout = asyncHandler(async (req, res) => {
 })
 
 const fogotPassword = asyncHandler(async (req, res) => {
-  const { email } = req.query
+  const { email } = req.body
   if (!email) throw new Error("Email is required")
   const user = await User.findOne({ email })
   if (!user) throw new Error("User not found")
@@ -125,16 +175,19 @@ const fogotPassword = asyncHandler(async (req, res) => {
 
   // Gui email chua reset token
   const html = `<h1>Reset your password. This link will expire in 15 minutes</h1>
-  <a href=${process.env.URL_SERVER}/api/user/reset-password/${resetToken}>Reset Password</a>`
+  <a href=${process.env.CLIENT_URL}/reset-password/${resetToken}>Reset Password</a>`
 
   const data = {
     email,
     html,
+    subject: "Reset Password",
   }
   const rs = await sendMail(data)
   return res.status(200).json({
-    success: true,
-    mes: rs,
+    success: rs.response?.includes("OK") ? true : false,
+    mes: rs.response?.includes("OK")
+      ? "Please check your email"
+      : "Something went wrong",
   })
 })
 
@@ -291,4 +344,5 @@ module.exports = {
   updateUserByAdmin,
   updateUserAddress,
   updateCart,
+  finalRegister,
 }
