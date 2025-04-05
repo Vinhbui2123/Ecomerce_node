@@ -11,6 +11,7 @@ module.exports = {
       },
       backgroundColor: {
         main: "#ee3131",
+        overlay: "rgba(0, 0, 0, 0.5)",
       },
       colors: {
         main: "#ee3131",
@@ -45,11 +46,33 @@ module.exports = {
             transform: "translateY(0)",
           },
         },
+        "slide-right": {
+          "0%": {
+            "-webkit-transform": "translateX(-1000px)",
+            transform: "translateX(-1000px)",
+          },
+          "100%": {
+            "-webkit-transform": "translateX(0)",
+            transform: "translateX(0)",
+          },
+        },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        slideUp: {
+          "0%": { transform: "translateY(20px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
       },
       animation: {
         "slide-top":
           "slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both",
         "slide-top-sm": "slide-top-sm 0.3s linear both",
+        "slide-right":
+          "slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;",
+        "fade-in": "fadeIn 0.3s ease-in-out",
+        "slide-up": "slideUp 0.3s ease-out",
       },
     },
   },
