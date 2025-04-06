@@ -4,7 +4,12 @@ export const apiRegister = (data) =>
     url: "/user/register",
     method: "post",
     data,
-    withCredentials: true,
+    // withCredentials: true, // su dung khi cai dat cookie
+  })
+export const apiFinalRegister = (token) =>
+  axios({
+    url: "/user/finalregister/" + token,
+    method: "put",
   })
 export const apiLogin = (data) =>
   axios({
