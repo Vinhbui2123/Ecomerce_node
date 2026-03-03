@@ -344,7 +344,7 @@ const updateCart = asyncHandler(async (req, res) => {
       const response = await User.updateOne(
         { _id, "cart.product": pid },
         {
-          $set: {
+          $inc: {
             "cart.$.quantity": quantity,
           },
         }
