@@ -77,7 +77,7 @@ const Login = () => {
       }
     }
   }, [payload, isRegister])
-  const finalRegister = async () => {
+  async function finalRegister(){
     const response = await apiFinalRegister(token)
     if (response.success) {
       Swal.fire("Congratulations!", response.mes, "success").then(() => {
